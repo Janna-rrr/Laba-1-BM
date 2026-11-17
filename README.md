@@ -32,10 +32,12 @@
 ## 2. Установка Debian
 
 После завершения автоматической установки виртуальная машина запустилась, и загрузился рабочий стол Debian.
-![vm_debian.png](1/vm_debian.png)
+<img width="1366" height="728" alt="vm_debian" src="https://github.com/user-attachments/assets/b5cd8cab-c8b7-4fc4-af70-860982db8baf" />
+
 
 Проверка работоспособности системы с помощью запуска браузера Firefox. 
-![Brause_vm.png](1/Brause_vm.png)
+<img width="1366" height="729" alt="Brause_vm" src="https://github.com/user-attachments/assets/c661d2cd-8760-40ab-bf52-2d0921d588d6" />
+
 
 Основные параметры системы:
 
@@ -48,4 +50,5 @@
 ### 3.1. Режим NAT и Bridge
 Для первого сетевого адаптера выбран режим NAT (Bridged был протестирован, но для основной работы выбран NAT). В данной конфигурации виртуальная машина получает доступ к интернету через хост-систему, но остаётся недоступной для прямых входящих подключений из внешней сети, поэтому для организации SSH-доступа была настроена функция проброса портов.
 
-![NAT_vm.png](1/NAT_vm.png)
+<img width="739" height="497" alt="NAT_vm" src="https://github.com/user-attachments/assets/54f796a8-a465-4832-be18-c7af7acc23f5" />
+
