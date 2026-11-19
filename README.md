@@ -41,7 +41,7 @@
 
 Основные параметры системы:
 
-- Имя компьютера: `Debian`;
+- Имя компьютера: `Pomidorka`;
 - Пользователь: `Zhanna`;
 
 ---
@@ -52,3 +52,81 @@
 
 <img width="739" height="497" alt="NAT_vm" src="https://github.com/user-attachments/assets/54f796a8-a465-4832-be18-c7af7acc23f5" />
 
+### 3.2. Обновление системы
+
+Выполнены команды обновления списков пакетов и самих пакетов:
+
+```bash
+sudo apt-get update
+sudo apt-get upgrade
+```
+Команды `apt-get update` и `apt-get upgrade` успешно обратились к сетевым репозиториям (`deb.debian.org`, `security.debian.org`).
+<img width="762" height="269" alt="BMterminal" src="https://github.com/user-attachments/assets/dafb8280-9c4a-4ad8-b918-ba83e08f4c77" />
+
+
+---
+
+## 4. Настройка SSH
+
+### 4.1. Установка SSH-сервера
+
+Установлен пакет `openssh-server`:
+
+```bash
+sudo apt install -y openssh-server
+```
+<img width="693" height="92" alt="terminal2" src="https://github.com/user-attachments/assets/f7b49a28-cffe-4047-91cc-c96372fbc214" />
+
+
+Служба SSH включена в автозагрузку и немедленно запущена. Для верификации статуса выполнена команда `sudo systemctl status ssh`. Согласно выводу, сервис `ssh.service` находится в состоянии `active (running)` и принимает входящие соединения на стандартном порту `22`.
+
+```bash
+sudo systemctl status ssh
+```
+<img width="840" height="382" alt="terminal3" src="https://github.com/user-attachments/assets/eaad6920-0083-419a-bd12-17268b910c9d" />
+
+
+### 4.2. Проброс порта для режима NAT
+
+Так как в режиме NAT виртуальная машина недоступна напрямую, в настройках адаптера («Проброс портов») добавлено правило.
+Теперь подключение к порту `22` на `127.0.0.1` хоста перенаправляется на порт `22` виртуальной машины.
+<img width="451" height="279" alt="port" src="https://github.com/user-attachments/assets/4b3ca3f5-67d7-4d17-9691-5a3894c3b96b" />
+
+
+### 4.3. Подключение по паролю
+
+С основного компьютера (Windows, PowerShell) выполнено подключение к виртуальной машине.
+После ввода пароля пользователя вход выполнен успешно.
+<img width="704" height="235" alt="ssh" src="https://github.com/user-attachments/assets/74d02d9a-c7b3-434b-aca6-5eb53c99a87d" />
+
+
+### 4.4. Подключение по ключу
+
+Для входа без пароля использовалась пара ключей SSH (`id_ed25519`), созданная на основном компьютере командой:
+
+```bash
+ssh-keygen -t ed25519
+```
+<img width="551" height="317" alt="ssh3" src="https://github.com/user-attachments/assets/ce38b6dc-94e7-470f-9a90-e303319d8638" />
+
+
+Для настройки беспарольного доступа публичный ключ (`id_ed25519.pub`) был скопирован с хост-машины и добавлен в файл `~/.ssh/authorized_keys` гостевой системы вручную через текстовый редактор `nano`.
+
+```bash
+mkdir -p ~/.ssh             
+nano ~/.ssh/authorized_keys  
+chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys 
+```
+<img width="437" height="24" alt="sssh" src="https://github.com/user-attachments/assets/8c25ddbd-6c72-4ad2-bc0e-8b51567d0739" />
+<img width="653" height="19" alt="sssh1" src="https://github.com/user-attachments/assets/3935097a-1457-4ac9-b3d3-f85b4bb34d4c" />
+
+
+После этого повторное подключение выполняется без ввода пароля:
+
+<img width="703" height="172" alt="ypa" src="https://github.com/user-attachments/assets/d9fe9ffa-b619-41d7-b617-863d4d6e78d3" />
+
+---
+
+## Вывод
+
+В ходе лабораторной работы установлен гипервизор Oracle VirtualBox версии 7.2.22, создана виртуальная машина с выделением 4 ГБ ОЗУ, 2 ЦПУ и диска объёмом 20 ГБ. На гостевую систему установлена ОС Debian 13 «Trixie» (amd64, netinst) с именем хоста Debian и пользователем zgu. Протестированы сетевые режимы NAT и Bridged; для основной работы выбран NAT с настройкой проброса портов (порт хоста 22 -> порт гостя 22). Выполнено обновление системы (apt-get update && apt-get upgrade), все пакеты актуализированы без ошибок. Установлен и запущен SSH-сервер openssh-server. Доступ с хост-машины организован двумя способами: по паролю и по криптографическому ключу Ed25519 (беспарольный вход через 127.0.0.1). Цель работы достигнута: освоены технологии виртуализации, настройки сети Linux и безопасного удалённого администрирования.
